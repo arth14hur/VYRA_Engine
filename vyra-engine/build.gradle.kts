@@ -16,16 +16,18 @@ dependencies {
     implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
 
     val lwjglModules = listOf("lwjgl", "lwjgl-glfw", "lwjgl-vulkan", "lwjgl-stb")
+
     lwjglModules.forEach { module ->
-        // nécessaire pour la compilation
+
         implementation("org.lwjgl:$module:$lwjglVersion")
-        // nécessaire pour exécution natives Linux
-        runtimeOnly("org.lwjgl:$module:$lwjglVersion:$lwjglNatives")
+
+        if (module != "lwjgl-vulkan") {
+            runtimeOnly("org.lwjgl:$module:$lwjglVersion:$lwjglNatives")
+        }
     }
 
     implementation("org.joml:joml:1.10.5")
 }
-
 // Désactiver toutes les tâches de test
 tasks.matching { it.name.startsWith("test") }.configureEach {
     enabled = false
